@@ -17,7 +17,11 @@
 </Configuration>
 '@
 
-$configXML | out-file "$($env:USERPROFILE)\Desktop\configXML.xml"
+#$configXML | out-file "$($env:USERPROFILE)\Desktop\configXML.xml"
+#this will put the xml on the desktop
+
+$configXML | out-file configXML.xml
+
 
 function Get-ODTUri {
 
