@@ -28,4 +28,22 @@ function create_cloud_users_csv{
 		-UsageLocation $_.UsageLocation -Password $_.Password -LicenseAssignment $SKU} 
 	}
 
-create_cloud_users_csv
+#DELETE THE CREATED USERS
+function delete_cloud_created_users{
+    $domain = "@fr330ff1c3.onmicrosoft.com"
+    $csv | Select-Object -Property `
+    @{Name="DisplayName";Expression={$_.DisplayName}},
+    @{Name="UserPrincipalName";Expression={$_.UserPrincipalName + $domain}},
+    @{Name="UsageLocation";Expression={$_.UsageLocation}},
+    @{Name="Password";Expression={$_.Password}} | foreach {Remove-MsolUser -UserPrincipalName $_.UserPrincipalName -Force}
+}
+function permanently_delete_cloud_created_users{
+    $domain = "@fr330ff1c3.onmicrosoft.com"
+    $csv | Select-Object -Property `
+    @{Name="DisplayName";Expression={$_.DisplayName}},
+    @{Name="UserPrincipalName";Expression={$_.UserPrincipalName + $domain}},
+    @{Name="UsageLocation";Expression={$_.UsageLocation}},
+    @{Name="Password";Expression={$_.Password}} | foreach {Remove-MsolUser -UserPrincipalName $_.UserPrincipalName -RemoveFromRecycleBin -Force}
+}
+
+
