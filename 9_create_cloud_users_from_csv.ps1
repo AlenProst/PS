@@ -1,4 +1,4 @@
-#CSV - ADUsersPS.csv
+#CSV - cloud_users_license.csv
 
 $my_skuid = (Get-MsolAccountSku).accountskuid
 
