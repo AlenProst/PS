@@ -8,11 +8,6 @@
 #CSV - local_AD.csv
 
 
-$ou_name = "syncedO365"
-$ou_path = "DC=n4m3,DC=LOCAL"
-$ou_full_path = "OU=$ou_name," + $ou_path
-
-
 New-ADOrganizationalUnit -Name $ou_name -Path $ou_path -ProtectedFromAccidentalDeletion $False
 
 # Get the ADForest suffixes in a PowerShell array
@@ -20,7 +15,7 @@ $my_suffixes = Get-ADForest | Select-Object -ExpandProperty UPNSuffixes
 
 # If there is only one suffix, use it directly without looping
 if ($my_suffixes.Count -eq 1) {
-    $suffix = "@" + $my_suffixes[0]
+    $suffix = "@" + $my_suffixes
 } else {
     # Loop through the array with the index of the suffix
     for ($counter=0; $counter -lt $my_suffixes.Length; $counter++){
@@ -55,3 +50,5 @@ Import-Csv -Path "C:\Users\Administrator\Desktop\local_ad.csv" |
         -Country $_.Country `
         -Path $ou_full_path
     }
+
+
