@@ -1,18 +1,25 @@
 #####Create multiple users in AD for testing####
 
-#get the ADForest suffixes in an Powersehll array
-$my_suffix2= Get-adforest | select UPNSuffixes -ExpandProperty UPNSuffixes
+$ou_name = "syncedO365"
+$ou_path = "DC=b,DC=dns-cloud,DC=LOCAL"
+$ou_full_path = "OU=$ou_name," + $ou_path
 
-#looping throug the array with the index of the suffix
+# Get the ADForest suffixes in a PowerShell array
+$my_suffixes = Get-ADForest | Select-Object -ExpandProperty UPNSuffixes
 
-for ($counter=0; $counter -lt $my_suffix2.Length; $counter++){Write-host $counter,$my_suffix2[$counter]}
-
-#read the input from user 
-$my_choice = [int](Read-Host "Enter the number of the domain: ")
-
-
-#save the suffix in a variable
-$suffix = $my_suffix2[$my_choice]
+# If there is only one suffix, use it directly without looping
+if ($my_suffixes.Count -eq 1) {
+    $suffix = "@" + $my_suffixes
+} else {
+    # Loop through the array with the index of the suffix
+    for ($counter=0; $counter -lt $my_suffixes.Length; $counter++){
+        Write-host $counter, $my_suffixes[$counter]
+    }
+    # Read the input from user 
+    $my_choice = [int](Read-Host "Enter the number of the domain: ")
+    # Save the suffix in a variable
+    $suffix = "@" + $my_suffixes[$my_choice]
+}
 
 $val = [int](Read-Host "Enter number of test users")
 $count_of_users = 0
