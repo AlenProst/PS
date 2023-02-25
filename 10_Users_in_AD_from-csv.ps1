@@ -7,6 +7,9 @@
 
 #CSV - local_AD.csv
 
+$ou_name = "syncedO365"
+$ou_path = "DC=n4m3,DC=LOCAL"
+$ou_full_path = "OU=$ou_name," + $ou_path
 
 New-ADOrganizationalUnit -Name $ou_name -Path $ou_path -ProtectedFromAccidentalDeletion $False
 
