@@ -68,3 +68,19 @@ $Shell.Windows() | ForEach-Object { $_.Refresh() }
 
 }
 
+function prepare_admin_account{
+$id = (Get-ADDomain).DistinguishedName
+Set-ADDefaultDomainPasswordPolicy `
+-Identity $id `
+-ComplexityEnabled $False `
+-MinPasswordLength 1 `
+-PasswordHistoryCount 0 `
+-MinPasswordAge 00.00:00:00 `
+-MaxPasswordAge 00.00:00:00
+
+gpupdate /force
+
+$NewPwd = ConvertTo-SecureString "1" -AsPlainText -Force
+Set-ADAccountPassword -Identity Administrator -NewPassword $NewPwd -Reset
+}
+
