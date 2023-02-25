@@ -2,19 +2,25 @@
 ####LOCAL MAILBOXES####
 #######################
 
-#get the ADForest suffixes in an Powersehll array
-$my_suffix2= Get-adforest | select UPNSuffixes -ExpandProperty UPNSuffixes
+
 
 #looping throug the array with the index of the suffix
 
-for ($counter=0; $counter -lt $my_suffix2.Length; $counter++){Write-host $counter,$my_suffix2[$counter]}
+$my_suffixes = Get-ADForest | Select-Object -ExpandProperty UPNSuffixes
 
-#read the input from user 
-$my_choice = [int](Read-Host "Enter the number of the domain: ")
-
-
-#save the suffix in a variable
-$suffix = "@" + $my_suffix2[$my_choice]
+# If there is only one suffix, use it directly without looping
+if ($my_suffixes.Count -eq 1) {
+    $suffix = "@" + $my_suffixes
+} else {
+    # Loop through the array with the index of the suffix
+    for ($counter=0; $counter -lt $my_suffixes.Length; $counter++){
+        Write-host $counter, $my_suffixes[$counter]
+    }
+    # Read the input from user 
+    $my_choice = [int](Read-Host "Enter the number of the domain: ")
+    # Save the suffix in a variable
+    $suffix = "@" + $my_suffixes[$my_choice]
+}
 
 $val = [int](Read-Host "Enter number of test users")
 $count_of_users = 0
@@ -34,6 +40,6 @@ while($count_of_users -ne $val)
         -Password $pwd1 `
 	-UserPrincipalName $upn_suffix `
         -Database $db `
-        -OrganizationalUnit synced_user
+        -OrganizationalUnit ex_user
          Write-Host $created_user "created"
 }
